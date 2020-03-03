@@ -1,16 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-Autor:
-    Jorge Casillas
-Fecha:
-    Noviembre/2019
-Contenido:
-    Uso simple de XGB y LightGBM para competir en DrivenData:
-       https://www.drivendata.org/competitions/57/nepal-earthquake/
-    Inteligencia de Negocio
-    Grado en Ingeniería Informática
-    Universidad de Granada
-"""
 
 import pandas as pd
 import numpy as np
