@@ -1,0 +1,455 @@
+\documentclass[paper=a4, fontsize=12pt]{article} % A4 paper and 12pt font size
+
+% ---- Entrada y salida de texto -----
+
+\usepackage[T1]{fontenc} % Use 8-bit encoding that has 256 glyphs
+\usepackage[utf8]{inputenc}
+% \usepackage[light,math]{iwona}
+
+
+\usepackage{fancyhdr}
+\usepackage{fancybox}
+\usepackage{pseudocode}
+\usepackage{csvsimple}
+
+% ---- Idioma --------
+
+\usepackage[spanish, es-tabla]{babel} % Selecciona el español para palabras introducidas automáticamente, p.ej. "septiembre" en la fecha y especifica que se use la palabra Tabla en vez de Cuadro
+
+% ---- Otros paquetes ----
+
+\usepackage{amsmath,amsfonts,amsthm} % Math packages
+\usepackage{graphics,graphicx, floatrow} %para incluir imágenes y notas en las imágenes
+\usepackage{graphics,graphicx, float} %para incluir imágenes y colocarlas
+\usepackage{enumerate}
+\usepackage{subfigure}
+% \makesavenoteenv{tabular}
+% \makesavenoteenv{table}
+% Para hacer tablas comlejas
+%\usepackage{multirow}
+%\usepackage{threeparttable}
+
+\usepackage{sectsty} % Allows customizing section commands
+\allsectionsfont{\centering \scshape} % Make all sections centered, the default font and small caps
+
+\usepackage{fancyhdr} % Custom headers and footers
+\usepackage[usenames, dvipsnames]{color}
+\usepackage{colortbl}
+
+\usepackage{xcolor}
+\usepackage{url}
+
+\usepackage{cite}
+
+\usepackage[bookmarks=true,
+    bookmarksnumbered=false, % true means bookmarks in
+             % left window are numbered
+    bookmarksopen=false,   % true means only level 1
+             % are displayed.
+    colorlinks=true,
+    urlcolor=webblue,
+    citecolor=webred,
+    linkcolor=webblue]{hyperref}
+\definecolor{webgreen}{rgb}{0, 0.5, 0} % less intense green
+\definecolor{webblue}{rgb}{0, 0, 0.5}  % less intense blue
+\definecolor{webred}{rgb}{0.5, 0, 0} % less intense red
+
+
+%% Define a new 'leo' style for the package that will use a smaller font.
+\makeatletter
+\def\url@leostyle{%
+  \@ifundefined{selectfont}{\def\UrlFont{\sf}}{\def\UrlFont{\small\ttfamily}}}
+\makeatother
+%% Now actually use the newly defined style.
+\urlstyle{leo}
+
+\pagestyle{fancyplain} % Makes all pages in the document conform to the custom headers and footers
+\fancyhead{} % No page header - if you want one, create it in the same way as the footers below
+\fancyfoot[L]{} % Empty left footer
+\fancyfoot[C]{} % Empty center footer
+\fancyfoot[R]{\thepage} % Page numbering for right footer
+\renewcommand{\headrulewidth}{0pt} % Remove header underlines
+\renewcommand{\footrulewidth}{0pt} % Remove footer underlines
+\setlength{\headheight}{13.6pt} % Customize the height of the header
+
+\numberwithin{equation}{section} % Number equations within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+\numberwithin{figure}{section} % Number figures within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+\numberwithin{table}{section} % Number tables within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+
+
+\setlength\parindent{14pt} % SANGRÍA
+
+\newcommand{\horrule}[1]{\rule{\linewidth}{#1}} % Create horizontal rule command with 1 argument of height
+
+%%%%% Para cambiar el tipo de letra en el título de la sección %%%%%%%%%%%
+% \usepackage{sectsty}
+% \chapterfont{\fontfamily{pag}\selectfont} %% for chapter if you want
+% \sectionfont{\fontfamily{pag}\selectfont}
+% \subsectionfont{\fontfamily{pag}\selectfont}
+% \subsubsectionfont{\fontfamily{pag}\selectfont}
+
+%----------------------------------------------------------------------------------------
+% TÍTULO Y DATOS DEL ALUMNO
+%----------------------------------------------------------------------------------------
+
+\title{ 
+\normalfont \normalsize 
+\textsc{{\bf Inteligencia de Negocio (2019-2020)} \\ Grado en Ingeniería Informática \\ Universidad de Granada} \\ [25pt] % Your university, school and/or department name(s)
+\horrule{0.5pt} \\[0.4cm] % Thin top horizontal rule
+\huge Memoria Práctica 3 \\ Competición en DrivenData\\% The assignment title
+\horrule{2pt} \\[0.5cm] % Thick bottom horizontal rule
+}
+
+\author{Daniel Terol Guerrero\\DNI: 09076204J\\Correo: danielterol@correo.ugr.es} % Nombre y apellidos
+
+\date{\normalsize\today} % Incluye la fecha actual
+
+%----------------------------------------------------------------------------------------
+% DOCUMENTO
+%----------------------------------------------------------------------------------------
+
+\begin{document}
+
+\maketitle % Muestra el Título
+\pagenumbering{gobble}
+\newpage %inserta un salto de página
+
+\section{Posición final en la competición y \textit{Submissions}}	
+\subsection{Datos de mi cuenta personal \textit{Daniel\_Terol\_UGR}}
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.625]{Visualizaciones/mejor}
+  \caption{Mejor puntuación alcanzada en la competición.}
+  \label{mejor}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.7]{Visualizaciones/Sub1}
+  \caption{Lista de \textit{submissions} (1).}
+  \label{sub1}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.7]{Visualizaciones/Sub2}
+  \caption{Lista de \textit{submissions} (2).}
+  \label{sub2}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.7]{Visualizaciones/Sub3}
+  \caption{Lista de \textit{submissions} (3).}
+  \label{sub3}
+\end{figure}
+
+\subsection{Datos de mi cuenta secundaria \textit{Ihore}}
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.625]{Visualizaciones/posicionafinalIhore}
+  \caption{Mejor puntuación alcanzada en la competición con la cuenta \textit{Ihore}.}
+  \label{mejor}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.7]{Visualizaciones/SubmissionIhore1}
+  \caption{Lista de \textit{submissions} (1) con la cuenta \textit{Ihore}.}
+  \label{subI1}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.7]{Visualizaciones/SubmissionsIhore2}
+  \caption{Lista de \textit{submissions} (2) con la cuenta \textit{Ihore}.}
+  \label{subI2}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.7]{Visualizaciones/SubmissionsIhore3}
+  \caption{Lista de \textit{submissions} (3) con la cuenta \textit{Ihore}.}
+  \label{subI3}
+\end{figure}
+
+\newpage
+
+\tableofcontents % para generar el índice de contenidos
+\newpage
+\pagenumbering{arabic}
+
+\section{Introducción}
+\large En esta tercera práctica se ha abordado una competición real alojada en \href{https://www.drivendata.org/competitions/57/nepal-earthquake/}{DrivenData}. El objetivo de la competición es predecir la gravedad del daño a los edificios causado por el terremoto Gorkha de 2015 en Nepal. \\ 
+
+El \textit{dataset} de entrenamiento consta de 260.601 instancias y 39 atributos. La variable a predecir es una variable ordinal, \textit{damage\_grade}, que representa un nivel de daño al edificio que fue golpeado por el terremoto. Hay 3 grados de daño.
+
+\begin {itemize}
+\item 1 representa un daño bajo.
+\item 2 representa un daño medio.
+\item 3 representa la destrucción casi completa.
+\end{itemize}
+
+La medida de evaluación para nuestros algoritmos, se utiliza \textbf{F1-score} que equilibra la precisión y el \textit{recall} de un clasificador. \\
+
+Como aspecto a destacar es que la búsqueda de parámetros óptimos con \textit{GridSearch} no me funcionaba del todo bien puesto que me devolvía puntuaciones peores que con otras configuraciones. Por tanto, la mayoría de subidas son explorando diferentes configuraciones de los modelos.
+
+\newpage
+\section{Visualización de los datos}
+\subsection{Balanceo de clases}
+Lo primero que hay que analizar es el balanceo de las diferentes clases del problema:
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.7]{Visualizaciones/cardinalidad}
+  \caption{Cardinalidad de las diferentes clases del problema.}
+  \label{cardinalidad}
+\end{figure}
+
+Como se puede ver, la clase \textit{2} es la que mayor cardinalidad tiene. Mientras que la clase \textit{3} y \textit{1} están por detrás, siendo la clase \textit{1} la clase minoritaria.\\
+
+\subsection{Correlación}
+En un punto de la competición, decidí estudiar la correlación de todas las variables respecto a la variable a predecir, \textit{damage\_grade}:
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.5]{Visualizaciones/correlacion}
+  \caption{Correlación de todas las variables respecto a \textit{damage\_grade}}
+  \label{correlacion}
+\end{figure}
+
+Observando la \hyperref[correlacion]{figura \ref*{correlacion}}, se puede ver que las características que más correlación tienen con la clase son:
+
+\begin{itemize}
+\item \textit{has\_superstructure\_mud\_mortar\_stone} refleja si el edificio está hecho de barro.
+\item Mientras que la \textit{count\_floors\_pre\_eq} refleja el número de pisos que tenía el edificio antes del terremoto.
+\item Ninguna variable más refleja una correlación a destacar.
+\end{itemize}
+
+\newpage
+\section {Registro de subidas}
+
+La mayoría de entradas de la tabla, excepto la última, son de mi cuenta personal. No he podido realizar un seguimiento de versiones con las subidas de la cuenta secundaria pues no sé las configuraciones establecidas, excepto la última puesto que es la mejor puntuación conseguida y la última configuración, prácticamente, utilizada.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.5]{Visualizaciones/Registro1}
+  \caption{Seguimiento de las diferentes versiones (1).}
+  \label{registro1}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.5]{Visualizaciones/Registro2}
+  \caption{Seguimiento de las diferentes versiones (2).}
+  \label{registro2}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.5]{Visualizaciones/Registro3}
+  \caption{Seguimiento de las diferentes versiones (3).}
+  \label{registro3}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.625]{Visualizaciones/Registro4}
+  \caption{Seguimiento de las diferentes versiones (4).}
+  \label{registro4}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.625]{Visualizaciones/Registro5}
+  \caption{Seguimiento de las diferentes versiones (5).}
+  \label{registro5}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.5]{Visualizaciones/Registro6}
+  \caption{Seguimiento de las diferentes versiones (6).}
+  \label{registro6}
+\end{figure}
+
+\section {El camino hasta mis mejores puntuaciones}
+
+La primera toma de contacto con \textit{DrivenData} fueron dos subidas, \hyperref[registro1]{figura \ref*{registro1}}, haciendo uso de los modelos proporcionados por Jorge Casillas para poder saber cuál era mi punto de partida en la competición, donde se puede ver que era la posición 301 y una puntuación de $0'6883$. \\
+
+\subsection{Selección de características inicial}
+Analizando un poco el \textit{dataset} vi tres variables que eran identificadores y, además, con una gran cardinalidad cada uno de ellos:
+
+\begin{itemize}
+\item geo\_level\_1\_id
+\item geo\_level\_2\_id
+\item geo\_level\_3\_id
+\end{itemize}
+
+Me imaginé que eliminando estas características incrementaría, aunque fuera un poco, la puntuación conseguida. Para mi sorpresa, tanto con \textit{LightGBM} como con \textit{Random Forest}, empeoró drásticamente. \\
+
+\subsection{Toma de contacto con diferentes modelos}
+Después de este fracaso, me propuse probar diferentes modelos\footnote{Quise probar con SVM pero la ejecución se alargaba a más de 12 horas, cosa que lo hacía inviable.} para saber cuáles podrían ofrecer mejor rendimiento en el problema, mientras se me ocurría algún preprocesado o limpieza de ruido. 
+
+\subsubsection{Random Forest}
+Probé con \textit{Random Forest} \footnote{Como curiosidad, y sin saber el motivo, \textit{Random Forest} sobreaprendía muchísimo siendo el \textit{score} en el training de 0'9843.} con \textit{n\_estimators} = 100 y vi que me producía una puntuación de $0'6951$, que ya era una pequeña mejora frente al 0'6883 inicial de \textit{LightGBM}. \\
+
+Puesto que vi una mejora con \textit{n\_estimators} = 100, probé con \textit{n\_estimators} = 500. El resultado fue una mejora considerable, $0'6998$. Ya me encontraba bastante cerca de superar la barrera de 0'70.
+
+\subsubsection{KNN}
+Pese a haber obtenido buenos resultados con \textit{Random Forest} y pudiendo incrementar el número de modelos, decidí seguir probando con diferentes modelos, en este caso \textit{KNN}. El resultado no fue muy esperanzador, quizá por elegir solo los cinco mejores vecinos.
+
+\subsubsection{Gradient Boosted}
+Los resultados fueron buenos pero no lo suficientemente para poder explorar diferentes configuraciones de este algoritmo. Algo de destacar de \textit{Gradient Boosted} es que la puntuación obtenida en el \textit{training} y en \textit{DrivenData} es la que menos se diferencia entre ellas.
+
+\subsubsection{Árboles de decisión}
+Estableciendo los parámetros \textit{min\_samples\_split} = 100 y \textit{min\_samples\_leaf} = 50, los resultados son decentes pero no suficientes para esta competición. Cabe destacar que la ejecución fue tremendamente rápida.
+
+\subsubsection{LightGBM}
+\textit{LightGBM} ya lo ejecuté, ya que era uno de los algoritmos disponibles en el archivo original de Jorge Casillas. Puesto que el resultado obtenido con \textit{n\_estimators} = 200 fue bastante bien, pensé que podría conseguir una puntuación mejor con \textit{n\_estimators} = 1000 que la obtenida por \textit{Random Forest} pero el resultado no fue el esperado. Conseguí una puntuación de $0'6868$.
+
+\subsection{Intentando paliar el desbalanceo de clases}
+
+Con un intento de paliar el desbalanceo de clases, se hizo uso de la técnica \textit{SMOTE}.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.75]{Visualizaciones/smotebasico}
+  \caption{Aplicación de la técnica \textit{SMOTE}.}
+  \label{smote}
+\end{figure}
+
+\subsubsection{Aplicación incorrecta de SMOTE}
+Después de probar varios algoritmos, me di cuenta que había problemas de sobreaprendizaje \footnote{Pese a no tener captura de la mala aplicación de SMOTE, aplicaba el balanceo de clases tanto en el \textit{training} como en el \textit{test}.} puesto que obtuve un \textit{score} en el \textit{training} de $0'8279$ y en \textit{DrivenData} una puntuación de $0'4210$.
+
+\subsubsection{Ejecuciones con SMOTE}
+Una vez arreglado el problema de sobreaprendizaje, volví a probar con diferentes algoritmos para ver si el balanceo de clases producía algún impacto en las puntuaciones obtenidas pero no era así. Las ideas empezaban a escasear puesto que había probado selección de características, aunque no lo subiera a \textit{DrivenData} ya que los resultados eran nefastos. \\
+
+Entonces, ejecuté el problema con \textit{Random Forest} con el número de modelos a 1000. La diferencia en la puntuación obtenida entre el número de modelos igual a 500 y a 1000 es $0'0003$, diferencia suficiente para poder sobrepasar la línea de los $0'70$, posicionándome el 295 con una puntuación de $0'7001$.
+
+\subsection{Cambio en el tratamiento de las variables categóricas}
+Si nos fijamos en la \hyperref[registro2]{figura \ref*{registro2}}, se puede ver como después de obtener $0'7001$ hubo varios días donde no subí nada a \textit{DrivenData}. En esos días empecé a usar métodos de selección de características y limpieza de ruido puesto que la ejecución de \textit{Random Forest} con el número de modelos a 1000 duró varias horas, lo que empezaba a ser un inconveniente para poder seguir ajustando el número de modelos.\\
+
+En ejecuciones anteriores, \textit{LightGBM} no me había dado resultados excepcionales pero el día 17 de Diciembre, Jorge Casillas en clase de prácticas le pareció extraño que \textit{Random Forest} proporcionase mejores resultados que \textit{LightGBM}. Como consecuencia de esto, el día 17 de Diciembre hay reflejadas dos ejecuciones con \textit{LightGBM} con el número de modelos a 2000, puesto que \textit{LightGBM} es muy ligero y rápido. Los resultados eran decepcionantes. \\
+
+Las ideas se me agotaban y los resultados no eran muy buenos, entonces decidí modificar la forma en la que se codificaban las variables categóricas puesto que, desde el principio de la práctica, me parecía confuso y para nada intuitivo la manera en la que se hacía. \\
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.75]{Visualizaciones/encoding}
+  \caption{Modificación a la conversión de categórica a numérica.}
+  \label{encoding}
+\end{figure}
+
+La nueva forma de pasar las variables categóricas a numéricas consiste en los siguientes pasos:
+
+\begin{enumerate}
+\item Se guardan todas las variables categóricas en un vector.
+\item Tanto en el \textit{training} como en el \textit{test} se recorren las columnas correspondientes:
+	\begin{enumerate}
+	\item Se hace uso del método \textit{astype} que se encarga de convertir un vector al tipo que se le especifique, en este caso \textit{category}.
+	\item Una vez hecha la conversión, se usa \textit{cat.codes} que realiza la codificación correspondiente.
+	\end{enumerate}
+\end{enumerate}
+
+El método de conversión de Jorge Casillas y este método consiguen el mismo resultado. Decidí modificarlo puesto que pensé que si se hace uso de métodos propios de \textit{pandas} para la codificación sería más eficiente y efectivo.\\
+
+Debido a la limitación horaria, no pude probar ese día con el algoritmo y configuración que mejor resultado me devolvieron. Es decir, \textit{Random Forest} con el número de modelos con 1000 pero probé con \textit{n\_estimators} = 500 y, sorprendentemente, obtuve una puntuación en \textit{DrivenData} de $0'7219$ posicionándome en el puesto 221.
+
+\subsubsection {Explorando la mejor configuración con LightGBM}
+Como comenté anteriormente, a Jorge le extrañó que \textit{LightGBM} funcionase mejor que \textit{Random Forest} por tanto probé con \textit{LightGBM} con \textit{n\_estimators} = 2000 obteniendo una puntuación de $0'7440$ posicionándome el 99. \\
+
+A partir de este momento me dediqué a buscar el número más cercano al número óptimo de \textit{n\_estimators}. Después de varias configuraciones, el mejor resultado que obtuve fue con \textit{n\_estimators} = 3500 obteniendo una puntuación de $0'7462$ posicionándome en el puesto 74. \\
+
+Investigando por internet, y como se puede ver en \cite{tuning}, encontré que para obtener mejor precisión, había que aumentar el parámetro \textit{max\_bin} y \textit{num\_leaves}. El inconveniente es que si \textit{num\_leaves} aumentaba mucho había riesgo de que el modelo sobreprendiese. Después de varios intentos, desistí de modificar estos parámetros. \\
+
+Explorando el \href{https://github.com/gykovacs/smote_variants}{Github de gykovacs}, encontré que el SMOTE que ofrecía mejor rendimiento, siendo evaluado con \textit{F1-score}, era el \textit{polynom fit SMOTE}:
+
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.75]{Visualizaciones/smote_variants}
+  \caption{Adición del módulo smote\_variants.}
+  \label{smote_variants}
+\end{figure}
+
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.75]{Visualizaciones/smotepro}
+  \caption{Aplicación de polynom fit SMOTE.}
+  \label{smotepro}
+\end{figure}
+
+Los resultados no mejoraron la puntuación ya obtenida. Aún así, realicé un tratamiento sobre los datos para quedarme con las mejores características y ver si con este tratamiento y el SMOTE mejoraba la puntuación obtenida.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.75]{Visualizaciones/featureselection}
+  \caption{Selección de características.}
+  \label{feature}
+\end{figure}
+
+El método sigue los siguientes pasos:
+
+\begin{enumerate}
+\item Se entrena un modelo, en este caso \textit{LightGBM} con la mejor configuración hasta el momento.
+\item Se escogen las 18 mejores características del conjunto de datos y se crean dos nuevos conjuntos de datos con las características más importantes del \textit{dataset}.
+\end{enumerate}
+
+Los resultados no fueron los mejores. \\
+
+\subsubsection{Obteniendo mi mejor puntuación y entrando en el TOP50}
+Al no haber ninguna mejora, retomé mi búsqueda de parámetros óptimos de \textit{LightGBM}. Decidí aumentar mucho \textit{max\_bin}, puesto que había riesgo menor de que el modelo sobreaprendiera, y aumentar poco \textit{num\_leaves}. Para mí sorpresa, y como se puede ver en la \hyperref[registro4]{figura \ref*{registro4}} (versión 31), obtuve una puntuación de $0'7472$ posicionándome en el puesto 68.\\
+
+Después de varios intentos, la configuración de \textit{max\_bin} = 960 es la que mejor resultado me produjo, puntuándome con $0'7485$ en la posición 44, entrando así en el TOP 50.\\
+
+Una vez tenía la configuración "óptima" de \textit{n\_estimators} y \textit{max\_bin} me faltaba encontrar el parámetro óptimo de \textit{num\_leaves}. Después de varias pruebas, \hyperref[registro5]{figura \ref*{registro5}}, mi mejor resultado lo logré, \hyperref[registro6]{figura \ref*{registro6}}, con \textit{num\_leaves} = 29. Dicha puntuación fue $0'7486$ posicionándome en el puesto 46.
+
+\subsubsection {Últimos días de competición}
+Pese a haber estado en el TOP50 siendo la única cuenta \textit{UGR} varios días, el día 28-29 de Diciembre compañeros de la asignatura empezaron a entrar en el TOP50 y empezaron a adelantarme. Antes de ese momento llevaba varios días sin tocar la práctica, entrando simplemente a consultar la posición en \textit{DrivenData} pero cuando me adelantaron, tuve que empezar a buscar alternativa para rascar centésimas en la puntuación.\\
+
+De los diferentes consejos para mejorar la precisión en \cite{tuning} había uno que había pasado por alto:
+
+\begin{itemize}
+\item Disminuir el \textit{learning\_rate} y aumentar el número de modelos, \textit{n\_estimators}.
+\end{itemize}
+
+Puesto que había que rascar lo que se pudiera, decidí disminuir el \textit{learning\_rate} hasta $0'05$ e ir aumentando progresivamente el número de modelos para ver con cuál me devolvía mejor valor. Después de varias pruebas, como se puede ver en la \hyperref[registro6]{figura \ref*{registro6}}, la mejor configuración que encontré fue establecer el número de modelos a $8250$ obteniendo una puntuación de $0'7493$ posicionándome en el puesto 36 en la cuenta secundaria. \\
+
+\subsubsection{Suspensión de mi cuenta principal}
+
+El día 31 por la mañana me encontré que me habían cerrado la cuenta por múltiples cuentas y no pude realizar la mejor subida sobre mi cuenta personal. Sabía el riesgo de baneo, ya que las reglas de \textit{DrivenData} están bastante claras y creí tomar las medidas convenientes al respecto, es decir:
+
+\begin{itemize}
+\item  Un compañero mío se creó una cuenta, en una IP diferente a la mía (él en su casa), y yo nunca entré en esa cuenta desde mi ordenador/móvil, simplemente le pasaba por \textit{Whatsapp} los submissions para poder ver el resultado que devolvía dicha configuración. Posteriormente, subía en mi cuenta la mejor configuración que obtenía, imagino que fue en esos momentos cuando subía el mejor submission ya que obtenía la misma puntuación que otra cuenta y era sospechoso y me tumbaron la cuenta. 
+
+\item Con estas medidas y Jorge Casillas permitiéndonos cuenta secundaria creía que no pasaría nada pero, para mi sorpresa, sí pasó.
+\end{itemize}
+
+\section {Conclusión}
+Habiendo finalizado la competición, mi mejor posición es el puesto 42 con $0'7493$, pese a ser con la cuenta secundaria. \\
+
+Como conclusión de la competición, voy a comentar mis sensaciones respecto a la competición: 
+
+\begin{itemize}
+\item Empecé muy temprano a probar diferentes modelos, técnicas, visualizando datos. En definitiva, con ganas de aprender diferentes técnicas.
+\item Logré colarme en el TOP50, después de varios intentos y configuraciones, modificando la codificación de las variables categóricas.
+\item Los últimos días de competición fueron agobiantes puesto que tu nota depende de la posición obtenida por ti respecto a tus compañeros. Por tanto, cuando tus compañeros te alcanzaban, era agobiante y te hacía estar pendiente de la clasificación todo el día. 
+\item Pese al agobio, la experiencia de participar en una competición real ha sido interesante aunque quizá para un ambiente académico propondría un modelo de evaluación diferente en el que tu nota fuese aumentando según diferentes úmbrales de puntuación que consigas, y no tanto por la posición que tengas.
+
+\end{itemize}
+\section{Bibliografía}
+
+\begin{thebibliography}{0}
+  \bibitem{tuning} \url {https://lightgbm.readthedocs.io/en/latest/Parameters-Tuning.html}, Consultado el 19 de Diciembre.
+\bibitem{cat} \url {https://effectiveml.com/using-grid-search-to-optimise-catboost-parameters.html}, Consultado el 17 de Diciembre.
+\bibitem{feature} \url {https://towardsdatascience.com/a-feature-selection-tool-for-machine-learning-in-python-b64dd23710f0}, Consultado el 16 de Diciembre.
+
+\end{thebibliography}
+
+\end{document}
+
+
+nodo ---> eigenvector centrality
+color -->betweeness centrality

@@ -1,0 +1,697 @@
+\documentclass[paper=a4, fontsize=12pt]{article} % A4 paper and 12pt font size
+
+% ---- Entrada y salida de texto -----
+
+\usepackage[T1]{fontenc} % Use 8-bit encoding that has 256 glyphs
+\usepackage[utf8]{inputenc}
+% \usepackage[light,math]{iwona}
+
+
+\usepackage{fancyhdr}
+\usepackage{fancybox}
+\usepackage{pseudocode}
+\usepackage{csvsimple}
+
+% ---- Idioma --------
+
+\usepackage[spanish, es-tabla]{babel} % Selecciona el español para palabras introducidas automáticamente, p.ej. "septiembre" en la fecha y especifica que se use la palabra Tabla en vez de Cuadro
+
+% ---- Otros paquetes ----
+
+\usepackage{amsmath,amsfonts,amsthm} % Math packages
+\usepackage{graphics,graphicx, floatrow} %para incluir imágenes y notas en las imágenes
+\usepackage{graphics,graphicx, float} %para incluir imágenes y colocarlas
+\usepackage{enumerate}
+\usepackage{subfigure}
+% \makesavenoteenv{tabular}
+% \makesavenoteenv{table}
+% Para hacer tablas comlejas
+%\usepackage{multirow}
+%\usepackage{threeparttable}
+
+\usepackage{sectsty} % Allows customizing section commands
+\allsectionsfont{\centering \scshape} % Make all sections centered, the default font and small caps
+
+\usepackage{fancyhdr} % Custom headers and footers
+\usepackage[usenames, dvipsnames]{color}
+\usepackage{colortbl}
+
+\usepackage{xcolor}
+\usepackage{url}
+
+\usepackage{cite}
+
+\usepackage[bookmarks=true,
+    bookmarksnumbered=false, % true means bookmarks in
+             % left window are numbered
+    bookmarksopen=false,   % true means only level 1
+             % are displayed.
+    colorlinks=true,
+    urlcolor=webblue,
+    citecolor=webred,
+    linkcolor=webblue]{hyperref}
+\definecolor{webgreen}{rgb}{0, 0.5, 0} % less intense green
+\definecolor{webblue}{rgb}{0, 0, 0.5}  % less intense blue
+\definecolor{webred}{rgb}{0.5, 0, 0} % less intense red
+
+
+%% Define a new 'leo' style for the package that will use a smaller font.
+\makeatletter
+\def\url@leostyle{%
+  \@ifundefined{selectfont}{\def\UrlFont{\sf}}{\def\UrlFont{\small\ttfamily}}}
+\makeatother
+%% Now actually use the newly defined style.
+\urlstyle{leo}
+
+\pagestyle{fancyplain} % Makes all pages in the document conform to the custom headers and footers
+\fancyhead{} % No page header - if you want one, create it in the same way as the footers below
+\fancyfoot[L]{} % Empty left footer
+\fancyfoot[C]{} % Empty center footer
+\fancyfoot[R]{\thepage} % Page numbering for right footer
+\renewcommand{\headrulewidth}{0pt} % Remove header underlines
+\renewcommand{\footrulewidth}{0pt} % Remove footer underlines
+\setlength{\headheight}{13.6pt} % Customize the height of the header
+
+\numberwithin{equation}{section} % Number equations within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+\numberwithin{figure}{section} % Number figures within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+\numberwithin{table}{section} % Number tables within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+
+
+\setlength\parindent{14pt} % SANGRÍA
+
+\newcommand{\horrule}[1]{\rule{\linewidth}{#1}} % Create horizontal rule command with 1 argument of height
+
+%%%%% Para cambiar el tipo de letra en el título de la sección %%%%%%%%%%%
+% \usepackage{sectsty}
+% \chapterfont{\fontfamily{pag}\selectfont} %% for chapter if you want
+% \sectionfont{\fontfamily{pag}\selectfont}
+% \subsectionfont{\fontfamily{pag}\selectfont}
+% \subsubsectionfont{\fontfamily{pag}\selectfont}
+
+%----------------------------------------------------------------------------------------
+% TÍTULO Y DATOS DEL ALUMNO
+%----------------------------------------------------------------------------------------
+
+\title{ 
+\normalfont \normalsize 
+\textsc{{\bf Inteligencia de Negocio (2019-2020)} \\ Grado en Ingeniería Informática \\ Universidad de Granada} \\ [25pt] % Your university, school and/or department name(s)
+\horrule{0.5pt} \\[0.4cm] % Thin top horizontal rule
+\huge Memoria Práctica 1 \\ Análisis Predictivo Mediante Clasificación\\% The assignment title
+\horrule{2pt} \\[0.5cm] % Thick bottom horizontal rule
+}
+
+\author{Daniel Terol Guerrero\\DNI: 09076204J\\Correo: danielterol@correo.ugr.es} % Nombre y apellidos
+
+\date{\normalsize\today} % Incluye la fecha actual
+
+%----------------------------------------------------------------------------------------
+% DOCUMENTO
+%----------------------------------------------------------------------------------------
+
+\begin{document}
+
+\maketitle % Muestra el Título
+\pagenumbering{gobble}
+\newpage %inserta un salto de página
+
+\tableofcontents % para generar el índice de contenidos
+\newpage
+\pagenumbering{arabic}
+
+\section{Introducción}
+\large En esta práctica se va a abordar un problema de clasificación que consiste en analizar un \textit{dataset} para poder detectar si hay bombas de agua no funcionales. Para realizar el análisis, se va a abordar un conjunto de datos con 59000 instancias con un conjunto de atributos que determinan si una bomba de agua funciona, no funciona o funciona pero necesita reparación. Por tanto, utilizando diferentes modelos, se va a intentar predecir con cierta probabilidad qué bombas de agua se van a romper antes de ser instaladas. Que una bomba se vaya a romper depende de muchas condiciones; localización geográfica en la que se instale, cantidad de personas que van a usar esa bomba, calidad del agua, etc. Una vez se haya analizado el conjunto de datos, se procederá a realizar una configuración en los algoritmos y un preprocesado, no muy complejo, sobre el conjunto de datos para comprobar si se obtiene mayor precisión. \\
+
+Los clasificadores elegidos son C4.5, Random Forest, Gradient Boosted, Fuzzy Rules, SVM, Naïve Bayes y red neuronal. He elegido 7 algoritmos ya que quiero estudiar cómo actúan los diferentes algoritmos (reglas, árboles de decisión, modelo probabilístico, etc.) sobre un mismo problema. Además, quiero saber cuál funciona mejor sobre un problema de clasificación con tres posibles clases. \\
+
+Antes de continuar, añadir que algunos algoritmos necesitan un tratamiento básico sobre \textit{missing values}, normalización o convertir variables categóricas a numéricas. Por tanto, la primera ejecución se realizará el tratamiento mínimo necesario sobre los modelos para que puedan ser ejecutados.
+\newpage
+\section{Resultados obtenidos}
+
+	\subsection {C4.5}
+
+	\begin{figure}[H]
+	  \centering
+	  \includegraphics[scale=0.625]{img/C45/C45KnimeSimple}
+	  \caption{Flow de C4.5 en KNIME.}
+	  \label{flow_c45s}
+	\end{figure}
+
+	\begin{figure}[H]
+	  \centering
+	  \includegraphics[scale=0.625]{img/C45/C45ConfigurationSimple}
+	  \caption{Configuración básica de C4.5 en KNIME.}
+	  \label{config_c45s}
+	\end{figure}
+
+	Más adelante, vamos a cambiar parámetros en la configuración de C4.5 y vamos a estudiar cómo actúa el algoritmo con esos cambios comparándolo con su versión simple.
+
+	\extrarowheight = -0.5ex %Espacio entre fila y fila
+	\renewcommand{\arraystretch}{1.75} %Espacio entre fila y fila
+	\begin{table}[H]
+		\begin{center}
+		\csvautotabular{ConfusionMatrixC45Simple.csv}
+		\end{center}
+		\caption {Matriz de confusión de C4.5.}
+		\label {mcc45s}
+	\end{table}
+
+	Los resultados obtenidos son:
+	\begin{table}[H]
+		\begin{center}
+		\csvautotabular{StatisticsC45Simple.csv}
+		\end{center}
+		\caption {Estadísticas de C4.5.}
+		\label {statisticsC45s}
+	\end{table}
+
+	La complejidad del modelo es el número de hojas. A través del nodo \textit{Decision Tree to Ruleset}, se ve que tiene 6375 hojas.
+
+\subsection {Random Forest}
+
+	\begin{figure}[H]
+	  \centering
+	  \includegraphics[scale=0.625]{img/RF/knimeRFSimple}
+	  \caption{Flow de Random Forest en KNIME.}
+	  \label{flow_RFs}
+	\end{figure}
+
+	\begin{figure}[H]
+	  \centering
+	  \includegraphics[scale=0.625]{img/RF/RFSimpleConfiguration}
+	  \caption{Configuración básica de Random Forest en KNIME.}
+	  \label{config_RFs}
+	\end{figure}
+
+	Con la configuración vista en la \hyperref[config_RFs]{Figura \ref*{config_RFs}}, se crean 100 modelos sobre 39 atributos. Por tanto, la complejidad de este algoritmo es esa, 100 modelos diferentes. Más adelante, cambiaremos estos parámetros para ver cómo actúa el algoritmo con nuevos parámetros.
+
+	\extrarowheight = -0.5ex %Espacio entre fila y fila
+	\renewcommand{\arraystretch}{1.75} %Espacio entre fila y fila
+	\begin{table}[H]
+		\begin{center}
+		\csvautotabular{ConfusionMatrixRFSimple.csv}
+		\end{center}
+		\caption {Matriz de confusión de Random Forest.}
+		\label {mcRFs}
+	\end{table}
+
+	Los resultados obtenidos son:
+	\begin{table}[H]
+		\begin{center}
+		\csvautotabular{StatisticsRFSimple.csv}
+		\end{center}
+		\caption {Estadísticas de Random Forest.}
+		\label {statisticsRFs}
+	\end{table}
+
+\subsection {Gradient Boosted}
+
+	\begin{figure}[H]
+	  \centering
+	  \includegraphics[scale=0.625]{img/GB/GBKnime}
+	  \caption{Flow de Gradient Boosted en KNIME.}
+	  \label{flow_GBs}
+	\end{figure}
+
+	\begin{figure}[H]
+	  \centering
+	  \includegraphics[scale=0.625]{img/GB/BoostingConfigurationSimple}
+	  \caption{Configuración básica de Gradient Boosted en KNIME.}
+	  \label{config_GBs}
+	\end{figure}
+
+	Con la configuración vista en la \hyperref[config_RFs]{Figura \ref*{config_GBs}}, se crean 100 modelos sobre 39 atributos con un learning rate muy bajito. La complejidad del algoritmo son 100 modelos.
+
+	\extrarowheight = -0.5ex %Espacio entre fila y fila
+	\renewcommand{\arraystretch}{1.75} %Espacio entre fila y fila
+	\begin{table}[H]
+		\begin{center}
+		\csvautotabular{ConfusionMatrixGBoostedSimple.csv}
+		\end{center}
+		\caption {Matriz de confusión de Gradient Boosted.}
+		\label {mcGBs}
+	\end{table}
+
+	Los resultados obtenidos son:
+	\begin{table}[H]
+		\begin{center}
+		\csvautotabular{StatisticsGBoostedSimple.csv}
+		\end{center}
+		\caption {Estadísticas de Gradient Boosted.}
+		\label {statisticsGBs}
+	\end{table}
+
+\subsection {Fuzzy Rules}
+
+	\begin{figure}[H]
+	  \centering
+	  \includegraphics[scale=0.625]{img/FR/simpleFR}
+	  \caption{Flow de Gradient Boosted en KNIME.}
+	  \label{flow_GBs}
+	\end{figure}
+
+	\extrarowheight = -0.5ex %Espacio entre fila y fila
+	\renewcommand{\arraystretch}{1.75} %Espacio entre fila y fila
+	\begin{table}[H]
+		\begin{center}
+		\csvautotabular{ConfusionMatrixFRSimple.csv}
+		\end{center}
+		\caption {Matriz de confusión de Fuzzy Rules.}
+		\label {mcFRs}
+	\end{table}
+
+	Los resultados obtenidos son:
+	\begin{table}[H]
+		\begin{center}
+		\csvautotabular{StatisticsFRSimple.csv}
+		\end{center}
+		\caption {Estadísticas de Fuzzy Rules.}
+		\label {statisticsFRs}
+	\end{table}
+
+	La complejidad del modelo de Fuzzy Rules se ha calculado al igual que la complejidad de C4.5 pero sin realizar el paso de convertir el árbol de decisión en reglas, ya que Fuzzy Rules son reglas directamente. Por tanto, la complejidad de Fuzzy Rules son 14813 reglas.
+
+\subsection {SVM}
+
+	\begin{figure}[H]
+	  \centering
+	  \includegraphics[scale=0.625]{img/SVM/svmknime}
+	  \caption{Flow de SVM en KNIME.}
+	  \label{flow_SVMs}
+	\end{figure}
+
+	Para que la ejecución sea lo más ligera posible, elimino, a través de \textit{Column filter}, algunas columnas con muchos valores diferentes. Además, transformo las variables categóricas en numéricas y las normalizo para que SVM pueda ejecutarse ya que requiere que los datos sean linealmente separables. Se establece la siguiente configuración:
+	\begin{figure}[H]
+	  \centering
+	  \includegraphics[scale=0.625]{img/SVM/SVMConfiguration}
+	  \caption{Configuración básica de SVM en KNIME.}
+	  \label{config_SVMs}
+	\end{figure}
+
+	\extrarowheight = -0.5ex %Espacio entre fila y fila
+	\renewcommand{\arraystretch}{1.75} %Espacio entre fila y fila
+	\begin{table}[H]
+		\begin{center}
+		\csvautotabular{ConfusionMatrixSVMSimple.csv}
+		\end{center}
+		\caption {Matriz de confusión de SVM.}
+		\label {mcSVMs}
+	\end{table}
+
+	Los resultados obtenidos son:
+	\begin{table}[H]
+		\begin{center}
+		\csvautotabular{StatisticsSVMSimple.csv}
+		\end{center}
+		\caption {Estadísticas de SVM.}
+		\label {statisticsSVMs}
+	\end{table}
+
+	Como dato curioso a añadir, este algoritmo estuvo más de 8 horas, una noche entera, hasta poder acabar. Para mi sorpresa, aún tardando tantas horas, no colgó KNIME y podía seguir usando mi ordenador mientras el algoritmo ejecutaba. Cuando finalizó la ejecución, observé que la clase minoritaria la toma como si no existiese a la hora de dividir las tres clases en un hiperplano. SVM no es capaz de dividir tres clases, lo cual es bastante curioso.
+
+\subsection {Naïve Bayes}
+
+	\begin{figure}[H]
+	  \centering
+	  \includegraphics[scale=0.625]{img/Bayes/bayesknime}
+	  \caption{Flow de Naïve Bayes en KNIME.}
+	  \label{flow_Bayess}
+	\end{figure}
+
+	Como se puede ver en la \hyperref[flow_Bayess]{Figura \ref*{flow_Bayess}}, no se ha realizado ningún preprocesado básico de datos. Por tanto, aparece un warning en el \textit{Learner} que avisa de que se han ignorado varias columnas por tener muchos valores. Se establece la siguiente configuración:
+
+	\begin{figure}[H]
+	  \centering
+	  \includegraphics[scale=0.625]{img/Bayes/NaiveBayesConfigurationSimple}
+	  \caption{Configuración básica de Naïve Bayes en KNIME.}
+	  \label{config_Bayess}
+	\end{figure}
+
+	\extrarowheight = -0.5ex %Espacio entre fila y fila
+	\renewcommand{\arraystretch}{1.75} %Espacio entre fila y fila
+	\begin{table}[H]
+		\begin{center}
+		\csvautotabular{ConfusionMatrixBayesSimple.csv}
+		\end{center}
+		\caption {Matriz de confusión de Naïve Bayes.}
+		\label {mcBayess}
+	\end{table}
+
+	Los resultados obtenidos son:
+	\begin{table}[H]
+		\begin{center}
+		\csvautotabular{StatisticsBayesSimple.csv}
+		\end{center}
+		\caption {Estadísticas de Naïve Bayes.}
+		\label {statisticsBayess}
+	\end{table}
+
+\subsection {RProp MLP}
+
+
+	\begin{figure}[H]
+	  \centering
+	  \includegraphics[scale=0.625]{img/MLP/MLPKnime}
+	  \caption{Flow de MLP en KNIME.}
+	  \label{flow_NNs}
+	\end{figure}
+
+Por definición, las redes neuronales necesitan valores numéricos y normalizados. Además, se realiza un tratamiento sobre \textit{missing values}. La configuración establecida es la siguiente:
+
+	\begin{figure}[H]
+	  \centering
+	  \includegraphics[scale=0.625]{img/MLP/MLPConfigurationSimple}
+	  \caption{Configuración básica de MLP en KNIME.}
+	  \label{config_NNs}
+	\end{figure}
+
+	La complejidad de la red neuronal se puede observar en su configuración (\hyperref[config_NNs]{Figura \ref*{config_NNs}}). Su configuración son 100 modelos, con una capa y 10 neuronas por capa. Este algoritmo va a ser tratado con una configuración distinta, centrándonos en el número de modelos, capas ocultas y neuronas, y un preprocesado posteriormente. 
+
+	\extrarowheight = -0.5ex %Espacio entre fila y fila
+	\renewcommand{\arraystretch}{1.75} %Espacio entre fila y fila
+	\begin{table}[H]
+		\begin{center}
+		\csvautotabular{ConfusionMatrixNNSimple.csv}
+		\end{center}
+		\caption {Matriz de confusión de MLP.}
+		\label {mcNNs}
+	\end{table}
+
+	Los resultados obtenidos son:
+	\begin{table}[H]
+		\begin{center}
+		\csvautotabular{StatisticsNNSimple.csv}
+		\end{center}
+		\caption {Estadísticas de MLP.}
+		\label {statisticsNNs}
+	\end{table}
+\newpage
+
+\section{Análisis de resultados}
+Decidí colocar todas las curvas ROC sobre la misma gráfica para que podamos ver todas las curvas de un vistazo y así facilitar el análisis visual.
+
+	\begin{figure}[H]
+	  \centering
+	  \includegraphics[scale=0.625]{img/ROCCurveSimple}
+	  \caption{Curvas ROC de todos los algoritmos.}
+	  \label{curva_roc_simple}
+	\end{figure}
+
+También se han agrupado todos los datos de los algoritmos en una misma tabla además de la incorporación de la columna \textit{Area Under the Curve (AUC)}.
+
+	\extrarowheight = -0.5ex %Espacio entre fila y fila
+	\renewcommand{\arraystretch}{1.75} %Espacio entre fila y fila
+	\begin{table}[H]
+		\begin{center}
+		\csvautotabular{simpleAlgosconAUC.csv}
+		\end{center}
+		\caption {Estadísticas de todos los algoritmos además del AUC.}
+		\label {statistics}
+	\end{table}
+
+He de resaltar que la columna \textit{Accuracy}, en este caso, es la precisión sobre nuestra clase positiva. Es decir, la clase \textit{non functional}. \\
+
+Como se puede observar, los mejores resultados, tanto en precisión como en AUC, son Random Forest, Gradient Boosted Trees y C4.5.
+Pese a ser más robustas que los árboles de decisión por los pesos y su gran robustez frente al ruido, la red neuronal no está ofreciendo los resultados que podríamos esperar. Por tanto, intentaré sacarle mejor precisión al algoritmo en etapas posteriores. \\
+
+Random Forest y Gradient Boosted es normal que arrojen buenos resultados ya que Random Forest es muy robusto al ruido y a los valores perdidos y Gradient Boosted, según podemos leer en \cite{unbalanced} es útil en problemas con desbalanceo de clases, ya que aumenta el impacto de la clase positiva. En la siguiente tabla podemos ver el desbalanceo de clases:
+
+	\extrarowheight = -0.5ex %Espacio entre fila y fila
+	\renewcommand{\arraystretch}{1.75} %Espacio entre fila y fila
+	\begin{table}[H]
+		\begin{center}
+		\csvautotabular{DataDistribution.csv}
+		\end{center}
+		\caption {Distribución de las clases en nuestro problema.}
+		\label {datadistribution}
+	\end{table}
+
+Fuzzy Rules, Naïve Bayes y SVM son los que devuelven peor resultado debido al desbalanceo de clases. SVM se ve penalizado en AUC al haber ignorado la clase minoritaria, \textit{functional needs repair}, aunque en precisión no es tremendamente malo. Fuzzy Rules no está mal del todo pero la complejidad del modelo es bastante alta, por tanto es una elección cuestionable. Sobre Naïve Bayes, se intentará sacar mejor precisión en pasos posteriores con un preprocesado de datos, al igual que con C4.5.
+
+\section{Configuración de algoritmos}
+\subsection {C4.5}
+Las modificaciones realizadas sobre C4.5 son dos principalmente: Gain Ratio y C4.5 con poda.
+\subsubsection {C4.5 Gain Ratio}
+En la configuración básica, la medida de calidad del algoritmo era Gini Index pero quería probar con la otra medida de calidad disponible. La configuración establecida es la siguiente:
+
+	\begin{figure}[H]
+	  \centering
+	  \includegraphics[scale=0.625]{img/C45/GainRatio}
+	  \caption{Configuración con Gain Ratio de C4.5.}
+	  \label{gainratioC45}
+	\end{figure}
+
+ \subsubsection {C4.5 con poda}
+Con esta configuración, quería comprobar si se puede mantener una buena precisión reduciendo la complejidad del modelo y, por tanto, mejorando su interpretabilidad. La configuración era la siguiente:
+
+	\begin{figure}[H]
+	  \centering
+	  \includegraphics[scale=0.625]{img/C45/Pruning}
+	  \caption{Configuración de C4.5 con poda.}
+	  \label{pruningC45}
+	\end{figure}
+
+La tabla de resultados comparando las nuevas configuraciones con la simple es la siguiente\footnote{Nótese que aparece C4.5 preprocesado. Esa configuración la abordaremos más adelante aunque aparezca ya.}:
+
+	\extrarowheight = -0.5ex %Espacio entre fila y fila
+	\renewcommand{\arraystretch}{1.75} %Espacio entre fila y fila
+	\begin{table}[H]
+		\begin{center}
+		\csvautotabular{studyaboutC45.csv}
+		\end{center}
+		\caption {Tabla de resultados de todas las ejecuciones de C45.}
+		\label {C45comparation}
+	\end{table}
+
+Como podemos ver en la \hyperref[C45comparation]{Tabla \ref*{C45comparation}}, las configuraciones con más precisión son la configuración básica, \textit{Gini Index}, y la configuración con poda. Lo mismo pasa con \textit{AUC}, además de que la configuración con poda destaca respecto a la configuración simple. Además, al haber realizado poda, el número de reglas de la configuración con poda es bastante inferior al resto, aumentando así su interpretablidad. \\
+
+Por tanto, podemos ver como la mejor opción para abordar este problema con C4.5 es realizando poda, mantenemos precisión, un buen \textit{AUC} y buena interpretabilidad teniendo en cuenta el número de instancias del conjunto de datos.
+
+Añado, a continuación, la curva ROC para visualizar el AUC mejor.
+
+	\begin{figure}[H]
+	  \centering
+	  \includegraphics[scale=0.625]{img/RCC45}
+	  \caption{Curvas ROC de todas las configuraciones de C4.5.}
+	  \label{curva_roc_c45}
+	\end{figure}
+
+
+\subsection {Random Forest}
+
+Las modificaciones realizadas sobre Random Forest son: Gini Index y 200 modelos con Gain Ratio.
+\subsubsection {Random Forest Gini Index}
+En la configuración básica, la medida de calidad del algoritmo era Information Gain Ratio pero quería probar con la otra medida de calidad disponible. Además, quería ver qué modelo da mejores prestaciones ya que C4.5 tiene las mismas medidas de calidad. La configuración establecida es la siguiente:
+
+	\begin{figure}[H]
+	  \centering
+	  \includegraphics[scale=0.625]{img/RF/Gini}
+	  \caption{Configuración con Gini de Random Forest.}
+	  \label{giniRF}
+	\end{figure}
+
+ \subsubsection {Random Forest 200 modelos}
+Con esta configuración, quería ver si duplicando el número de modelos que va a utilizar puede mejorar significativamente la precisión o el \textit{AUC}. La configuración es la siguiente:
+
+	\begin{figure}[H]
+	  \centering
+	  \includegraphics[scale=0.625]{img/RF/200}
+	  \caption{Configuración de Random Forest con 200 modelos.}
+	  \label{RF200}
+	\end{figure}
+
+La tabla de resultados comparando las nuevas configuraciones con la simple es la siguiente\footnote{Nótese que aparece Random Forest preprocesado. Esa configuración la abordaremos más adelante aunque aparezca ya.}:
+
+	\extrarowheight = -0.5ex %Espacio entre fila y fila
+	\renewcommand{\arraystretch}{1.75} %Espacio entre fila y fila
+	\begin{table}[H]
+		\begin{center}
+		\csvautotabular{studyaboutRForest.csv}
+		\end{center}
+		\caption {Tabla de resultados de todas las ejecuciones de Random Forest.}
+		\label {RFcomparation}
+	\end{table}
+
+Como podemos ver en la \hyperref[RFcomparation]{Tabla \ref*{RFcomparation}}, la configuración con más precisión es la que utiliza 200 modelos para clasificar nuestro problema. Aún así, la diferencia respecto al resto de algoritmos es extremedamente baja. Esto me hace pensar que, aunque pongamos 500 modelos, muy difícilmente se va a mejorar significativamente la precisión con Random Forest.\\
+
+Por tanto, a la hora de aplicar Random Forest, se puede aplicar cualquier configuración de las utilizadas y va a devolver resultados muy similares. Al menos en este problema.\\
+
+Realizando una comparativa con C4.5, podemos ver en la \hyperref[C45comparation]{Tabla \ref*{C45comparation}}, como C4.5 simple y C4.5 Gain Ratio tienen menor precisión y \textit{AUC} que utilizando Random Forest con Gini Index y Gain Ratio. Lo cual es normal, pues Random Forest utiliza 100 clasificadores diferentes.\\
+
+
+Añado, a continuación, la curva ROC para visualizar el AUC mejor.
+
+	\begin{figure}[H]
+	  \centering
+	  \includegraphics[scale=0.625]{img/RCRF}
+	  \caption{Curvas ROC de todas las configuraciones de Random Forest.}
+	  \label{curva_roc_rf}
+	\end{figure}
+\subsection {RProp MLP}
+
+Las modificaciones realizadas sobre la red neuronal son ejecutarlo con 200 modelos pero diferenciando en que una opción tiene 3 capas y 100 neuronas, mientras que la otra tiene 6 capas y 50 neuronas. Con este experimento, quiero comprobar qué elemento es más relevante a la hora de obtener mejor precisión, si las capas ocultas o las neuronas.
+
+\subsubsection {MLP con 200 modelos, 3 capas ocultas y 100 neuronas por capa.}
+La configuración establecida es la siguiente:
+
+	\begin{figure}[H]
+	  \centering
+	  \includegraphics[scale=0.625]{img/MLP/2003100}
+	  \caption{Configuración de red neuronal con 200 modelos, 3 capas ocultas y 100 neuronas por capa.}
+	  \label{NN2003}
+	\end{figure}
+
+ \subsubsection {MLP con 200 modelos, 6 capas ocultas y 50 neuronas por capa.}
+La configuración es la siguiente:
+
+	\begin{figure}[H]
+	  \centering
+	  \includegraphics[scale=0.625]{img/MLP/200650}
+	  \caption{Configuración de red neuronal con 200 modelos, 6 capas ocultas y 50 neuronas por capa.}
+	  \label{NN2006}
+	\end{figure}
+
+La tabla de resultados comparando las nuevas configuraciones con la simple es la siguiente\footnote{Nótese que aparece MLP preprocesado. Esa configuración la abordaremos más adelante aunque aparezca ya.}:
+
+	\extrarowheight = -0.5ex %Espacio entre fila y fila
+	\renewcommand{\arraystretch}{1.75} %Espacio entre fila y fila
+	\begin{table}[H]
+		\begin{center}
+		\csvautotabular{studyaboutNNetwork.csv}
+		\end{center}
+		\caption {Tabla de resultados de todas las ejecuciones de la red neuronal.}
+		\label {NNcomparation}
+	\end{table}
+
+Como podemos ver en la \hyperref[NNcomparation]{Tabla \ref*{NNcomparation}}, la configuración con más precisión es la que utiliza 3 capas ocultas y 100 neuronas por capa. Pese a que nuestro problema no es linealmente separable, un exceso de capas ocultas, en este caso 6, no proporciona mejores resultados que 3 capas y 100 neuronas. Esto me hace pensar que 3 capas ocultas son suficientes para estudiar este problema y las 100 neuronas apoyan para obtener buenos resultados. Aún así, la diferencia respecto a la otra opción en términos de precisión no es muy grande mientras que en \textit{AUC} es algo superior. Como era de esperar, la configuración simple de 100 modelos, 1 capa oculta y 10 neuronas por capa se queda muy por detrás respecto a las otras configuraciones. \\
+
+Como comenté en el apartado anterior, las redes neuronales deberían proporcionar mejores resultados que los árboles de decisión. Si comparamos con la \hyperref[C45comparation]{Tabla \ref*{C45comparation}}, vemos que la configuración de 3 capas ocultas y 100 neuronas sigue ofreciendo peor precisión que la configuración simple de C4.5 pero mejor valor \textit{AUC}. Si ahora comparamos con C4.5 con poda, la red neuronal se queda muy por detrás en ambos valores. Esto me hace pensar que se podría encontrar mejor configuración de la red neuronal a base de prueba y error. \\
+
+Añado, a continuación, la curva ROC para visualizar el AUC mejor.
+
+	\begin{figure}[H]
+	  \centering
+	  \includegraphics[scale=0.625]{img/RCNN}
+	  \caption{Curvas ROC de todas las configuraciones de la red neuronal.}
+	  \label{curva_roc_nn}
+	\end{figure}
+
+\section{Procesado de datos}
+El proceso de preprocesado de los datos que he seguido es la siguiente:
+
+\begin{enumerate}
+\item He filtrado varios atributos a través del nodo \textit{Column Filter}. Los atributos seleccionados para excluirlos del conjunto de datos han sido estudiado previamente a través del nodo \textit{Linear Correlation} ya que existían diferentes atributos que reflejen la misma información. Además de esos atributos, he seleccionado ciertos atributos, debido a mi análisis sobre el conjunto de datos y qué era cada atributo, para excluirlos también ya que no eran atributos de calidad (\textit{date\_recorded}, \textit{basin}, \textit{region}, \textit{region\_code}, etc).
+\item Una vez filtrado los atributos, se imputan \textit{missing values} de forma sencilla a través del nodo \textit{Missing Values}.
+\item Por último, he realizado un balanceo de clases para equilibrar las clases a través del algoritmo \textit{Smote}.
+\end{enumerate}
+
+La distribución de las clases previa a la ejecución del algoritmo Smote es la siguiente:
+
+	\extrarowheight = -0.5ex %Espacio entre fila y fila
+	\renewcommand{\arraystretch}{1.75} %Espacio entre fila y fila
+	\begin{table}[H]
+		\begin{center}
+		\csvautotabular{DataDistributionbefore.csv}
+		\end{center}
+		\caption {Distribución de clases antes del algoritmo Smote.}
+		\label {DDbefore}
+	\end{table}
+
+Y la distribución de las clases posterior a la ejecución es:
+	\begin{table}[H]
+		\begin{center}
+		\csvautotabular{DataDistributionafter.csv}
+		\end{center}
+		\caption {Distribución de clases después del algoritmo Smote.}
+		\label {DDafter}
+	\end{table}
+
+Antes de comenzar con el análisis, señalizar que las ejecuciones con preprocesado de datos tienen la misma configuración que las configuraciones básicas de cada algoritmo.
+
+\subsection {C4.5}
+
+	\extrarowheight = -0.5ex %Espacio entre fila y fila
+	\renewcommand{\arraystretch}{1.75} %Espacio entre fila y fila
+	\begin{table}[H]
+		\begin{center}
+		\csvautotabular{studyaboutC45.csv}
+		\end{center}
+		\caption {Tabla de resultados de todas las ejecuciones de C45.}
+		\label {C45comparation2}
+	\end{table}
+
+C4.5 al realizar una exclusión de atributos, imputación de valores perdidos y un balanceo de clases proporciona peores resultados que si no se hiciese nada más que lo necesario para la ejecución. Su complejidad aumenta considerablemente, lo que es normal pues se ha aumentado muchísimo el número de instancias del conjunto de datos.
+
+\subsection {Random Forest}
+
+	\extrarowheight = -0.5ex %Espacio entre fila y fila
+	\renewcommand{\arraystretch}{1.75} %Espacio entre fila y fila
+	\begin{table}[H]
+		\begin{center}
+		\csvautotabular{studyaboutRForest.csv}
+		\end{center}
+		\caption {Tabla de resultados de todas las ejecuciones de Random Forest.}
+		\label {RFcomparation2}
+	\end{table}
+
+Random Forest, tanto de forma simple como preprocesado, devuelve resultados muy similares. Esto es debido a que el Random Forest es muy robusto al ruido y no se ve penalizado por el desbalanceo de clases.
+
+\subsection {RProp MLP}
+
+	\extrarowheight = -0.5ex %Espacio entre fila y fila
+	\renewcommand{\arraystretch}{1.75} %Espacio entre fila y fila
+	\begin{table}[H]
+		\begin{center}
+		\csvautotabular{studyaboutNNetwork.csv}
+		\end{center}
+		\caption {Tabla de resultados de todas las ejecuciones de la red neuronal.}
+		\label {NNcomparation2}
+	\end{table}
+
+Observando los datos, podemos comprobar que el \textit{TPR} se mantiene igual en la configuració básica como en el algoritmo preprocesado mientras que el \textit{TNR}, el número de predicciones negativas correctas entre el total, disminuye considerablemente. Este es el motivo por el que la precisión se ve reducida al igual que el \textit{AUC} y el resto de medidas. 
+
+\subsection {Naïve Bayes}
+
+	\extrarowheight = -0.5ex %Espacio entre fila y fila
+	\renewcommand{\arraystretch}{1.75} %Espacio entre fila y fila
+	\begin{table}[H]
+		\begin{center}
+		\csvautotabular{studyaboutBayes.csv}
+		\end{center}
+		\caption {Tabla de resultados de las ejecuciones de Naïve Bayes.}
+		\label {BYComparation}
+	\end{table}
+
+Al igual que el algoritmo MLP, la precisión se ve afectada por el descenso en \textit{TNR}, al igual que el resto de medidas.
+
+
+\section{Interpretración de resultados}
+
+Los modelos con peor rendimiento son Fuzzy Rules y SVM. Pese a que SVM ignoró la clase minoritaria, \textit Functional needs repair, no ha logrado obtener buena precisión ni área sobre la curva. Por otro lado, uno de los modelos con peor rendimiento es Naïve Bayes pese a ser una buena opción para problemas con múltiples clases. Además, para mi sorpresa, realizando preprocesado proporciona peores resultados que si no lo haces. \\
+
+Los mejores modelos han sido Random Forest, con su configuración de 200 modelos, y Gradient Boosted. Pese a que Gradient Boosted no recibió ninguna configuración específica, es capaz de mantenerse como el segundo modelo con mejor precisión y área sobre la curva. Esto me hace pensar que hubiera sido interesante aplicarle una configuración más avanzada, como 200 modelos, aunque podría haber sucedido el mismo suceso que con Random Forest. Es decir, que apenas mejorase ya que la diferencia entre 100 modelos y 200 modelos no es significante. \\
+
+Por otro lado, la red neuronal no es un mal modelo para ejecutar sobre este problema pero no es la mejor opción. Pese haber probado dos configuraciones distintas, no ha sido capaz de tener un rendimiento mejor que C4.5. \\
+
+Como modelo más curioso me quedo con C4.5 en su configuración de poda pues ha conseguido mantener la precisión y \textit{AUC} pero mejorando la interpretabilidad enormemente. La diferencia entre la complejidad de la configuración básica de C4.5 y la configuración con poda es de, más o menos, 5000 reglas. Me parece una total locura mantener buen rendimiento con tantísimas reglas menos. \\
+
+Por tanto, después de haber estudiado los modelos con diferentes configuraciones y/o preprocesado básico de datos, concluyo que todos tienen un rendimiento adecuado, unos más que otros, frente a este problema.
+
+\section{Bibliografía}
+
+\begin{thebibliography}{0}
+  \bibitem{neural} \url {https://towardsdatascience.com/beginners-ask-how-many-hidden-layers-neurons-to-use-in-artificial-neural-networks-51466afa0d3e}, Consultado el 21 de Octubre.
+  \bibitem{unbalanced} \url {https://www.analyticsvidhya.com/blog/2017/03/imbalanced-classification-problem/}, Consultado el 28 de Octubre.
+  \bibitem{rocCurve} \url {https://www.researchgate.net/post/Understanding_AUC_of_ROC_sensitivity_and_specificity_values}, Consultado el 28 de Octubre.
+  \bibitem{smote} \url {http://rikunert.com/SMOTE_explained}, Consultado el 2 de Octubre.
+
+
+\end{thebibliography}
+
+
+
+
+\end{document}
+
+
+nodo ---> eigenvector centrality
+color -->betweeness centrality
